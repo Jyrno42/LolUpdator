@@ -183,7 +183,7 @@ void retrieve_summoners (sql::ResultSet *rs, sql::Connection * mcon, std::string
 		chunkTimer.resume();
 		int region_thread_count = 0;
 		int num_summoners = 0;
-		std::vector<boost::thread > vec;
+		std::vector<boost::thread * > vec;
 		std::vector<Summoner_Ptr > chunk;
 
 		// For each summoner in region.
@@ -198,7 +198,7 @@ void retrieve_summoners (sql::ResultSet *rs, sql::Connection * mcon, std::string
 			if (chunk.size() >= PER_THREAD || chunk.size() == (*i).second.size())
 			{
 				region_thread_count++;
-				vec.push_back(boost::thread(&do_one_thread, chunk, ApiKeys));
+				vec.push_back(new boost::thread(&do_one_thread, chunk, ApiKeys));
 				chunk.clear();
 			}
 		}
@@ -210,11 +210,17 @@ void retrieve_summoners (sql::ResultSet *rs, sql::Connection * mcon, std::string
 		t.started_threads = vec.size();
 		t.finished_threads = 0;
 		t.summoners = num_summoners;
-		for(std::vector<boost::thread>::iterator cthread = vec.begin(); cthread != vec.end(); ++cthread)
+		for(std::vector<boost::thread *>::iterator cthread = vec.begin(); cthread != vec.end(); ++cthread)
 		{
-			(*cthread).join();
+			(*cthread)->join();
 			t.finished_threads++;
 		}
+		
+		for(std::vector<boost::thread *>::iterator cthread = vec.begin(); cthread != vec.end(); ++cthread)
+		{
+			delete *cthread;
+		}
+
 		threadTimer.stop();
 		t.time = threadTimer.format();
 		gReport.threads[(*i).first] = t;
