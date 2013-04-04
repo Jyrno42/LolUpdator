@@ -109,7 +109,7 @@ private:
 				boost::property_tree::read_json(dataStream, pt);
 				if(!pt.get<bool>("success"))
 				{
-					throw std::exception(std::string("Failed Call: ").append(ret).c_str());
+					throw std::exception();
 				}
 			}
 			catch(...)
