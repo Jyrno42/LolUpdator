@@ -1,6 +1,5 @@
-
-#ifndef ELOPHANT_H
-#define ELOPHANT_H
+#ifndef ELOPHANT_HPP
+#define ELOPHANT_HPP
 
 /* Standard C++ headers */
 #include <iostream>
@@ -8,24 +7,12 @@
 #include <sstream>
 #include <memory>
 #include <string>
-#include <stdexcept>
 
 /* Curl */
 #include <curl/curl.h>
 
-/* JSON */
-#include "JSON.h"
-
 /* Boost */
 #include <boost/thread.hpp>
-
-#include <boost/program_options.hpp>
-namespace po = boost::program_options;
-
-/* MySQL Connector/C++ specific headers */
-#define HAVE_STDINT_H 1
-#define CPPCONN_DONT_TYPEDEF_MS_TYPES_TO_C99_TYPES 1
-#include "mysql_connection.h"
 
 #include <driver.h>
 #include <connection.h>
@@ -34,150 +21,22 @@ namespace po = boost::program_options;
 #include <exception.h>
 #include <warning.h>
 
-#define PER_THREAD 15
-
-#define TO_INT(x) (static_cast <int> (std::floor(x)))
-
-using namespace sql::mysql;
-
-static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
-{
-    ((std::string*)userp)->append((char*)contents, size * nmemb);
-    return size * nmemb;
-}
-
-class Summoner
-{
-public:
-	int AID;
-	int SID;
-
-	std::string Region;
-	std::string Name;
-
-	int WON;
-	int LOST;
-
-	int Kills;
-	int Deaths;
-	int Assists;
-	
-	int MaxChampionKills;
-	int MinionKills;
-	int QuadraKills;
-	int PentaKills;
-	
-	int Tier;
-	std::wstring League;
-	int Rank;
-	int LeaguePoints;
-	int Score;
-
-	bool HotStreak;
-	bool FreshBlood;
-
-	bool Veteran;
-	int Modified;
-	bool Tracker;
-
-	bool success;
-	std::string error;
-
-	std::string Dump()
-	{
-		std::stringstream st;
-
-		std::string s;
-		s.assign(League.begin(), League.end());
-
-		st << "Summoner " << Name << ": " << WON << "-" << LOST << ", " << Kills << "/" << Deaths << "/" << Assists << std::endl <<
-			
-			"\tMaxChampionKills: " << MaxChampionKills << std::endl <<
-			"\tMinionKills: " << MinionKills << std::endl <<
-			"\tQuadraKills: " << QuadraKills << std::endl <<
-			"\tPentaKills: " << PentaKills << std::endl << std::endl <<
-
-			"\t" << "Tier: " << Tier << std::endl <<
-			"\t" << "League: " << s << std::endl <<
-			"\t" << "Rank: " << Rank << std::endl <<
-			"\t" << "LeaguePoints: " << LeaguePoints << std::endl <<
-			"\t" << "Score: " << Score << std::endl << std::endl <<
-			
-			"\t" << "HotStreak: " << (HotStreak ? "Y" : "N") << std::endl <<
-			"\t" << "FreshBlood: " << (FreshBlood ? "Y" : "N") << std::endl <<
-			"\t" << "Veteran: " << (Veteran ? "Y" : "N") << std::endl <<
-			"\t" << "Tracker: " << (Tracker ? "Y" : "N") << std::endl <<
-			
-			"";
-
-		return st.str();
-	}
-
-	std::string Query(std::string table, sql::mysql::MySQL_Connection* connection)
-	{
-		std::stringstream st;
-
-		std::string s;
-		s.assign(League.begin(), League.end());
-
-		std::string escaped = connection->escapeString(s);
-
-		st << "UPDATE " << table << " SET " << 
-			
-				"WON = '" << WON << "', "
-				"LOST = '" << LOST << "', "
-				
-				"Kills = '" << Kills << "', "
-				"Deaths = '" << Deaths << "', "
-				"Assists = '" << Assists << "', "
-				
-				"MaxChampionKills = '" << MaxChampionKills << "', "
-				"MinionKills = '" << MinionKills << "', "
-				"QuadraKills = '" << QuadraKills << "', "
-				"PentaKills = '" << PentaKills << "', "
-				
-				"Tier = '" << Tier << "', "
-				"League = '" << escaped << "', "
-				"Rank = '" << Rank << "', "
-				"LeaguePoints = '" << LeaguePoints << "', "
-				"Score = '" << Score << "', "
-				
-				"HotStreak = '" << (HotStreak ? "1" : "0") << "', "
-				"FreshBlood = '" << (FreshBlood ? "1" : "0") << "', "
-				"Veteran = '" << (Veteran ? "1" : "0") << "'"
-
-			" WHERE SID = '" << SID << "'";
-		return st.str();
-	}
-};
-
-class LeagueInfo
-{
-public:
-	int tier;
-	int rank;
-	int leaguePoints;
-
-	std::wstring name;
-	
-	bool hotStreak;
-	bool freshBlood;
-	bool veteran;
-
-	bool valid;
-};
+/* Custom */
+#include "ApiDataTypes.hpp"
 
 class Elophant
 {
 public:
-	Elophant (std::vector<std::string > apiKeys, bool check)
+	Elophant (const std::vector<std::string > apiKeys, bool check)
 	{
+		last_error = "";
+
 		curl = curl_easy_init();
 	
 		has_api = true;
 		if (curl)
 		{
-			for (std::vector<std::string >::iterator i = apiKeys.begin(); i != apiKeys.end(); ++i) 
+			for (std::vector<std::string >::const_iterator i = apiKeys.begin(); i != apiKeys.end(); ++i) 
 			{
 				int ret = test_api_key(*i, check);
 				if (ret < 10) {
@@ -214,12 +73,10 @@ public:
 		}
 	}
 
-	std::map<std::wstring, double> getCombinedRankedStatistics (int accountId, std::string Region);
-	std::map<int, std::map<std::wstring, double> > getRankedStats (int accountId, std::string Region);
-	LeagueInfo getLeagues (int accountId, std::string Region);
+	std::map<std::string, double> getCombinedRankedStatistics (int accountId, const std::string& Region);
+	std::map<int, std::map<std::string, double> > getRankedStats (int accountId, const std::string& Region);
+	LeagueInfo getLeagues (int accountId, const std::string& Region);
 	
-	int get_estimated_elo (Summoner s);
-
 	std::string last_error;
 
 	bool errbit()
@@ -234,17 +91,28 @@ private:
 
 	bool has_api;
 	
-	JSONObject _makeCall (std::string theFunction);
-	JSONObject _makeCall_inner (std::string theFunction, std::string key);
+	std::string _makeCall (const std::string& theFunction);
+	std::string _makeCall_inner (const std::string& theFunction, const std::string& key);
 
-	int test_api_key(std::string key, bool check)
+	int test_api_key(const std::string& key, bool check)
 	{
 		if (check)
 		{
 			ApiKeys[key] = -1;
 
-			JSONObject ret = _makeCall_inner("champions", key);
-			if (ret.find(L"data") == ret.end())
+			std::string ret = _makeCall_inner("champions", key);
+			try {
+				std::stringstream dataStream;
+				dataStream << ret;
+
+				boost::property_tree::ptree pt;
+				boost::property_tree::read_json(dataStream, pt);
+				if(!pt.get<bool>("success"))
+				{
+					throw std::exception(std::string("Failed Call: ").append(ret).c_str());
+				}
+			}
+			catch(...)
 			{
 				last_error = "";
 				last_error.append("ApiKey ").append(key).append(" is invalid.");

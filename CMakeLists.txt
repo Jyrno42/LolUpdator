@@ -31,7 +31,7 @@ set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON) 
 set(Boost_USE_STATIC_RUNTIME OFF)
 
-find_package(Boost 1.53.0 COMPONENTS thread system program_options REQUIRED)
+find_package(Boost 1.53.0 COMPONENTS thread system program_options timer chrono REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
 # Add Curl
@@ -49,17 +49,19 @@ link_directories(${Boost_LIBARY_DIRS})
 
 set(INCS 
     include/Elophant.hpp
-    include/JSON.h
-    include/JSONValue.h
+    include/ApiDataTypes.hpp
+    include/Summoner.hpp
     include/logic.hpp
+    include/Report.hpp
 )
 
 set(SRCS 
+    src/ApiDataTypes.cpp
     src/main.cpp
     src/Elophant.cpp
-    src/JSON.cpp
-    src/JSONValue.cpp
+    src/Summoner.cpp
     src/logic.cpp
+    src/Report.cpp
 )
 
 # Add Sources
