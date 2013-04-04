@@ -35,7 +35,7 @@ find_package(Boost 1.49.0 COMPONENTS thread system program_options timer chrono 
 include_directories(${Boost_INCLUDE_DIRS})
 
 # Add Curl
-find_package(curl REQUIRED)
+find_package(CURL REQUIRED)
 include_directories(${CURL_INCLUDE_DIRS})
 
 # Add MySQL
