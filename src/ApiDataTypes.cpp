@@ -38,7 +38,7 @@ LeagueInfo::LeagueInfo(const std::string& data, int sId)
 		}
 		else
 		{
-			throw std::exception(std::string("Failed Call: ").append(data).c_str());
+			throw std::exception();
 		}
 	}
 	catch(...)
