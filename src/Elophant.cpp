@@ -5,10 +5,15 @@ std::map<std::string, double> Elophant::getCombinedRankedStatistics (int account
 {
 	std::map<std::string, double> ret;
 
-	std::map<int, std::map<std::string, double> > value = getRankedStats(accountId, Region);
-	if (value.size() > 0)
+	try {
+		std::map<int, std::map<std::string, double> > value = getRankedStats(accountId, Region);
+		if (value.size() > 0)
+		{
+			return value[0];
+		}
+	}
+	catch(...)
 	{
-		return value[0];
 	}
 	return ret;
 }
@@ -23,25 +28,28 @@ std::map<int, std::map<std::string, double> > Elophant::getRankedStats (int acco
 	try {
 		std::string data = _makeCall(st.str());
 
-		std::stringstream dataStream;
-		dataStream << data;
-
-		boost::property_tree::ptree pt;
-		boost::property_tree::read_json(dataStream, pt);
-
-		if(pt.get<bool>("success"))
+		if (data.length() > 0)
 		{
-			BOOST_FOREACH(boost::property_tree::ptree::value_type &stats, pt.get_child("data.lifetimeStatistics")){
-				int championId = stats.second.get<int>("championId");
-				int value = stats.second.get<int>("value");
-				std::string statType = stats.second.get<std::string>("statType");
-				
-				if (ret.find(championId) == ret.end())
-				{
-					ret[championId] = std::map<std::string, double>();
-				}
-				ret[championId][statType] = value;
+			std::stringstream dataStream;
+			dataStream << data;
 
+			boost::property_tree::ptree pt;
+			boost::property_tree::read_json(dataStream, pt);
+
+			if(pt.get<bool>("success"))
+			{
+				BOOST_FOREACH(boost::property_tree::ptree::value_type &stats, pt.get_child("data.lifetimeStatistics")){
+					int championId = stats.second.get<int>("championId");
+					int value = stats.second.get<int>("value");
+					std::string statType = stats.second.get<std::string>("statType");
+				
+					if (ret.find(championId) == ret.end())
+					{
+						ret[championId] = std::map<std::string, double>();
+					}
+					ret[championId][statType] = value;
+
+				}
 			}
 		}
 	}

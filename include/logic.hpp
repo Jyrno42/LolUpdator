@@ -20,7 +20,7 @@ typedef Summoner* Summoner_Ptr;
 int get_tier(const std::string& tier);
 int get_rank(const std::string& rank);
 
-void * do_one_summoner(Summoner_Ptr summoner, const std::vector<std::string >& apiKeys);
+int do_one_summoner(Summoner_Ptr summoner, const std::vector<std::string >& apiKeys, int id);
 void * do_one_thread(std::vector<Summoner_Ptr> s, const std::vector<std::string >& ApiKeys);
 void retrieve_summoners (sql::ResultSet *rs, sql::Connection * mcon, std::string tbl_name, std::vector<std::string > ApiKeys);
 size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);

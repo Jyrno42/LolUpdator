@@ -62,7 +62,7 @@ int get_header_tag(const std::string& tag, const std::string& headers)
 
 
 
-void * do_one_summoner(Summoner_Ptr summoner, const std::vector<std::string >& apiKeys)
+int do_one_summoner(Summoner_Ptr summoner, const std::vector<std::string >& apiKeys)
 {
 	Elophant m_api(apiKeys, false);
 	summoner->success = false;
@@ -103,15 +103,24 @@ void * do_one_summoner(Summoner_Ptr summoner, const std::vector<std::string >& a
 	if (!summoner->success)
 	{
 		summoner->error = m_api.last_error;
+		return -1;
 	}
-	return NULL;
+	return 0;
 }
 
-void * do_one_thread(std::vector<Summoner_Ptr> s, const std::vector<std::string >& ApiKeys)
+void * do_one_thread(std::vector<Summoner_Ptr> s, const std::vector<std::string >& ApiKeys, int id)
 {
+	std::cout << "thread: " << id << std::endl;
 	for(std::vector<Summoner_Ptr>::iterator i = s.begin(); i != s.end(); ++i)
 	{
-		do_one_summoner((*i), ApiKeys);
+		if (do_one_summoner((*i), ApiKeys) == 0)
+		{
+			std:: cout << "\ts" << id << std::endl;
+		}
+		else
+		{
+			std:: cout << "\tf" << id << std::endl;
+		}
 	}
 	return NULL;
 }
@@ -186,6 +195,7 @@ void retrieve_summoners (sql::ResultSet *rs, sql::Connection * mcon, std::string
 		std::vector<boost::thread * > vec;
 		std::vector<Summoner_Ptr > chunk;
 
+		int n = 0;
 		// For each summoner in region.
 		for(std::map<int,Summoner>::iterator j = (*i).second.begin(); j != (*i).second.end(); ++j)
 		{
@@ -198,8 +208,9 @@ void retrieve_summoners (sql::ResultSet *rs, sql::Connection * mcon, std::string
 			if (chunk.size() >= PER_THREAD || chunk.size() == (*i).second.size())
 			{
 				region_thread_count++;
-				vec.push_back(new boost::thread(&do_one_thread, chunk, ApiKeys));
+				vec.push_back(new boost::thread(boost::bind(&do_one_thread, chunk, ApiKeys, n)));
 				chunk.clear();
+				n++;
 			}
 		}
 		chunkTimer.stop();
@@ -214,11 +225,6 @@ void retrieve_summoners (sql::ResultSet *rs, sql::Connection * mcon, std::string
 		{
 			(*cthread)->join();
 			t.finished_threads++;
-		}
-		
-		for(std::vector<boost::thread *>::iterator cthread = vec.begin(); cthread != vec.end(); ++cthread)
-		{
-			delete *cthread;
 		}
 
 		threadTimer.stop();

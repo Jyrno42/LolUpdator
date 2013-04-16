@@ -106,6 +106,7 @@ int main(int argc, const char *argv[])
 
 		std::string query("SELECT * FROM ");
 		query.append(table);
+		query.append(" ");
 		//query.append(" WHERE Name = 'TH3F0X'");
 		//query.append(" LIMIT 15");
 		query.append(qExtra);
