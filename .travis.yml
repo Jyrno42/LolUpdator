@@ -4,7 +4,7 @@ compiler: gcc
 
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -qq cmake libmysqlcppconn5 libmysqlcppconn-dev 
+  - sudo apt-get install -qq cmake libmysqlcppconn5 libmysqlcppconn-dev libboost-dev 
 
 before_script:
   - mkdir build

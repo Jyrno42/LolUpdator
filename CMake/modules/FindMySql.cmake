@@ -12,6 +12,8 @@ ENDIF(MYSQL_LIBRARY AND MYSQL_INCLUDE_DIRS)
 
 
 FIND_PATH(MYSQL_INCLUDE_DIRS
+  NAMES 
+  mysql_connection.h
   PATHS
   $ENV{MYSQL_DIR}/include
   /usr/local/include
