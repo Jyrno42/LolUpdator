@@ -1,20 +1,20 @@
 language: cpp
 
- compiler: gcc
+compiler: gcc
 
- before_install:
+before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq cmake libmysqlcppconn5 libmysqlcppconn-dev 
 
- before_script:
-   - mkdir build
-   - cd build
-   - cmake ..
+before_script:
+  - mkdir build
+  - cd build
+  - cmake ..
 
- script: make
+script: make
 
- notifications:
-   email:
-     - jyrno42@gmail.com
-   on_success: always
-   on_failure: always
+notifications:
+  email:
+    - jyrno42@gmail.com
+  on_success: always
+  on_failure: always
