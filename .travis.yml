@@ -2,10 +2,6 @@ language: cpp
 
 compiler: gcc
 
-env:
-  global:
-    - secure "Tz2fbmDwCMy1hpZ0kv4IqHO0qkqOUixXxxTL8d2DjANWuGCYYuLEEfXfABrS\nUufIJoFVMD9ejQc+a+4dVYc67voDXQvb7nhsscvVMwJal6PxVYO3dql1NfxM\n8gYVHSCZWfmGJQXBufjSuSrp0bMrmfL4MX/+YdKUSoZqqaXqsSk="
-
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq cmake libmysqlcppconn5 libmysqlcppconn-dev
