@@ -1,4 +1,4 @@
-﻿# LolUpdater - Lol Ladder updator
+# LolUpdater - Lol Ladder updator
 # Copyright (C) 2013 Jürno Ader
 #
 # This program is free software: you can redistribute it and/or modify
