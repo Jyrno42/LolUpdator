@@ -19,18 +19,10 @@ before_script:
 - cmake ..
 after_script:
 - echo "Posting file to server"
-- curl -i --header "Content-Type:application/octet-stream" -F "key=$UPLOAD_KEY" --data-binary @$TRAVIS_BUILD_DIR/build/updater
-  http://update.th3f0x.com/build.php
+- curl -i --header "Content-Type:application/octet-stream" --data-binary @$TRAVIS_BUILD_DIR/build/updater $UPLOAD_URL
 script: make
 notifications:
   email:
   - jyrno42@gmail.com
   on_success: always
   on_failure: always
-env:
-  global:
-  - secure: ! 'FrpjHfBt9OjvigfjgQ3pY08aZl52BJ76w+plK1A3IPy2cjpwnnnOz3FyN3QH
-
-      POAYRlh3UbcjKJVltLibWUOc9/yeF+UeNrNKf6zjfuB5YyqeMEQSpqXf3izN
-
-      4vkQoHxNpfeWD0+LEBjEOcqpynvKDQ3nczgjWL2niYZGVJHHDTM='
