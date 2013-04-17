@@ -26,7 +26,7 @@ before_script:
   - cmake ..
 
 after_script:
-  - echo
+  - echo "Posting file to server"
   #- curl --request POST --form binary="@${TRAVIS_BUILD_DIR}/build/updater" http://update.th3f0x.com/build.php?key=${UPLOAD_KEY}
   - curl -F "filedata=@$TRAVIS_BUILD_DIR/build/updater;type=application/octet-stream" http://update.th3f0x.com/build.php?key=$UPLOAD_KEY
   
