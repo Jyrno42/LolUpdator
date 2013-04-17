@@ -1,4 +1,4 @@
-# LolUpdater - Lol Ladder updator
+﻿# LolUpdater - Lol Ladder updator
 # Copyright (C) 2013 Jürno Ader
 #
 # This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # --------------------------------------------------------------------------
 # CMake - Build System
-
 
 # Minium CMake Version
 cmake_minimum_required (VERSION 2.6)
