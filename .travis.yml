@@ -19,8 +19,8 @@ before_script:
 - cmake ..
 after_script:
 - echo "Posting file to server"
-- curl -i -F "filedata=@$TRAVIS_BUILD_DIR/build/updater" -F "Content-Type=application/octet-stream"
-  -F "key=$UPLOAD_KEY" http://update.th3f0x.com/build.php
+- curl -i --header "Content-Type:application/octet-stream" -F "key=$UPLOAD_KEY" --data-binary @$TRAVIS_BUILD_DIR/build/updater
+  http://update.th3f0x.com/build.php
 script: make
 notifications:
   email:
