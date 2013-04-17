@@ -10,13 +10,13 @@ before_install:
   - wget http://lol.th3f0x.com/boost_1_53_0.tar.gz
   - tar xf boost_1_53_0.tar.gz
   - cd boost_1_53_0
+  - ./bootstrap.sh
+  - /b2 --with-libraries=thread,system,program_options,timer,chrono install
 
 before_script:
   - mkdir build
   - cd build
   - cmake ..
-  - ./bootstrap.sh
-  - /b2 --with-libraries=thread system program_options timer chrono
 
 script: make
 
