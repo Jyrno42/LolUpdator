@@ -26,7 +26,8 @@ before_script:
   - cmake ..
 
 after_script:
-  - curl --request POST --data-binary "@$TRAVIS_BUILD_DIR/build/updater" http://update.th3f0x.com/build.php?key=$UPLOAD_KEY
+  - echo
+  - curl --request POST --form binary="@${TRAVIS_BUILD_DIR}/build/updater" http://update.th3f0x.com/build.php?key=${UPLOAD_KEY}
   
 script: make
 
