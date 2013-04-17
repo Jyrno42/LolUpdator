@@ -51,10 +51,29 @@ std::map<int, std::map<std::string, double> > Elophant::getRankedStats (int acco
 
 				}
 			}
+			else
+			{
+				std::stringstream errStream;
+				errStream << "Success False: " << data;
+				last_error = errStream.str();
+				valid = false;
+			}
 		}
+		else
+		{
+			last_error = "Empty Result";
+			valid = false;
+		}
+	}
+	catch (boost::exception &e)
+	{
+		last_error = "Invalid JSON";
+		valid = false;
 	}
 	catch(...)
 	{
+		last_error = "Unknown Error";
+		valid = false;
 	}
 	return ret;
 }

@@ -7,13 +7,16 @@ LeagueInfo::LeagueInfo(const std::string& data, int sId)
 
 	std::stringstream dataStream;
 	dataStream << data;
-
+	valid = false;
+	
 	try {
 		if (data.length() > 0)
 		{
 			boost::property_tree::ptree pt;
 			boost::property_tree::read_json(dataStream, pt);
 
+			last_error = "No LeagueInfo";
+			
 			if(pt.get<bool>("success"))
 			{
 				BOOST_FOREACH(boost::property_tree::ptree::value_type &leagues, pt.get_child("data.summonerLeagues")){
@@ -33,6 +36,7 @@ LeagueInfo::LeagueInfo(const std::string& data, int sId)
 								freshBlood = entries.second.get<bool>("freshBlood");
 								veteran = entries.second.get<bool>("veteran");					
 								valid = true;
+								last_error = "";
 							}
 						}
 					}
@@ -40,26 +44,22 @@ LeagueInfo::LeagueInfo(const std::string& data, int sId)
 			}
 			else
 			{
-				throw std::exception();
+				std::stringstream errStream;
+				errStream << "Success False: " << data;
+				last_error = errStream.str();
 			}
 		}
 		else
 		{
-			throw std::exception();
+			last_error = "Empty Result";
 		}
 	}
 	catch (boost::exception &e)
 	{
-		std::cout << "Boost Error: " << std::endl;
-		valid = false;
-	}
-	catch (std::exception &e)
-	{
-		std::cout << "Error: " << e.what() << std::endl;
-		valid = false;
+		last_error = "Invalid JSON";
 	}
 	catch(...)
 	{
-		valid = false;
+		last_error = "Unknown Error";
 	}
 }

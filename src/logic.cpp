@@ -98,11 +98,15 @@ int do_one_summoner(Summoner_Ptr summoner, const std::vector<std::string >& apiK
 			summoner->Veteran = leagueInfo.veteran;
 			summoner->success = true;
 		}
+		else
+		{
+			summoner->error = m_api.last_error;
+			return -1;
+		}
 	}
-
-	if (!summoner->success)
+	else
 	{
-		summoner->error = m_api.last_error;
+		summoner->error = leagueInfo.last_error;
 		return -1;
 	}
 	return 0;
@@ -110,16 +114,16 @@ int do_one_summoner(Summoner_Ptr summoner, const std::vector<std::string >& apiK
 
 void * do_one_thread(std::vector<Summoner_Ptr> s, const std::vector<std::string >& ApiKeys, int id)
 {
-	std::cout << "thread: " << id << std::endl;
+	//std::cout << "thread: " << id << std::endl;
 	for(std::vector<Summoner_Ptr>::iterator i = s.begin(); i != s.end(); ++i)
 	{
 		if (do_one_summoner((*i), ApiKeys) == 0)
 		{
-			std:: cout << "\ts" << id << std::endl;
+			//std:: cout << "\ts" << id << std::endl;
 		}
 		else
 		{
-			std:: cout << "\tf" << id << std::endl;
+			//std:: cout << "\tf" << id << std::endl;
 		}
 	}
 	return NULL;

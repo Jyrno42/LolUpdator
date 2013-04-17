@@ -17,6 +17,7 @@ void Report::GetReport()
 	
 	root.put<int>("total", total);
 	root.put<int>("failed", failed);
+	root.put<int>("errors", errors.size());
 
 	for(std::vector<std::string >::iterator i = errors.begin(); i != errors.end(); ++i)
 	{

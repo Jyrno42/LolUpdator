@@ -26,6 +26,8 @@ public:
 	bool veteran;
 
 	bool valid;
+	
+	std::string last_error;
 
 	/**
 	  * Construct from the returned data.
