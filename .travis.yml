@@ -28,7 +28,7 @@ before_script:
 after_script:
   - echo
   #- curl --request POST --form binary="@${TRAVIS_BUILD_DIR}/build/updater" http://update.th3f0x.com/build.php?key=${UPLOAD_KEY}
-  - curl -i -F name=file -F filedata=@${TRAVIS_BUILD_DIR}/build/updater http://update.th3f0x.com/build.php?key=${UPLOAD_KEY}
+  - curl -F "filedata=@$TRAVIS_BUILD_DIR/build/updater;type=application/octet-stream" http://update.th3f0x.com/build.php?key=$UPLOAD_KEY
   
 script: make
 
