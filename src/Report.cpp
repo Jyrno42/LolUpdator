@@ -5,7 +5,7 @@ void Report::GetReport()
 	std::time_t timeStamp = std::time(0);
 
 	std::stringstream fileNameStream;
-	fileNameStream << reportDirectory << "\\" << "report_" << timeStamp << ".json";
+	fileNameStream << reportDirectory << "report_" << timeStamp << ".json";
 
 	boost::property_tree::ptree 
 		root, 
