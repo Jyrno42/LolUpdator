@@ -47,6 +47,7 @@ public:
 			curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 			curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
 			curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30);
+			curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
 
 			if (ApiKeys.size() < 1)
 			{
