@@ -4,12 +4,19 @@ compiler: gcc
 
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -qq cmake libmysqlcppconn5 libmysqlcppconn-dev libboost-dev libboost-all-dev
+  - sudo apt-get install -qq cmake libmysqlcppconn5 libmysqlcppconn-dev
+  - mkdir ~/boost
+  - cd ~/boost
+  - wget http://lol.th3f0x.com/boost_1_53_0.tar.gz
+  - tar xf boost_1_53_0.tar.gz
+  - cd boost_1_53_0
 
 before_script:
   - mkdir build
   - cd build
   - cmake ..
+  - ./bootstrap.sh
+  - /b2 --with-libraries=thread system program_options timer chrono
 
 script: make
 
