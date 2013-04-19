@@ -22,8 +22,9 @@ int Summoner::get_estimated_elo ()
 	double range = ranges[tier_s][1] - ranges[tier_s][0];
 	double div = range / 5;
 	double rank = 5 - Rank;
+	double lpMod = ((static_cast <double> (LeaguePoints)) / 100.0);
 
-	return TO_INT((ranges[tier_s][0] + (div * rank) + (div * (LeaguePoints / 100))));
+	return TO_INT((ranges[tier_s][0] + (div * rank) + (div * lpMod)));
 }
 
 std::string Summoner::Dump()
