@@ -14,8 +14,6 @@ void Report::GetReport()
 	doc["total"].SetInt(total);
 	doc["failed"].SetInt(failed);
 
-	doc["timers"].SetObject();
-	doc["threads"].SetObject();
 	
 	rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
@@ -26,14 +24,17 @@ void Report::GetReport()
 		arr.PushBack(val, allocator);
 	}
 	doc["errors"] = arr;
-
+	
+	rapidjson::Value tObj(rapidjson::kObjectType);
 	for(std::map<std::string, std::string >::iterator i = timers.begin(); i != timers.end(); ++i)
 	{
 		rapidjson::Value key((*i).first.c_str());
 		rapidjson::Value val((*i).second.c_str());
-		doc["timers"].AddMember(key, val, allocator);
+		tObj.AddMember(key, val, allocator);
 	}
-
+	doc["timers"] = tObj;
+	
+	rapidjson::Value thObj(rapidjson::kObjectType);
 	for(std::map<std::string, ThreadInfo >::iterator i = threads.begin(); i != threads.end(); ++i)
 	{
 		rapidjson::Value key((*i).first.c_str());
@@ -47,8 +48,9 @@ void Report::GetReport()
 
 		tElement["time"] = (*i).second.time.c_str();
 
-		doc["threads"].AddMember(key, tElement, allocator);
+		thObj.AddMember(key, tElement, allocator);
 	}
+	doc["threads"] = thObj;
 	
 	FILE * file = fopen(fileNameStream.str().c_str(), "w");
 
