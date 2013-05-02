@@ -7,17 +7,7 @@ void Report::GetReport()
 	std::stringstream fileNameStream;
 	fileNameStream << reportDirectory << "report_" << timeStamp << ".json";
 
-	rapidjson::Document doc;
-	doc.SetObject();
-	
-	doc["result"].SetBool(result);
-	doc["total"].SetInt(total);
-	doc["failed"].SetInt(failed);
-
-	
-	rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
-
-	rapidjson::Value arr(rapidjson::kArrayType);
+	/*rapidjson::Value arr(rapidjson::kArrayType);
 	for(std::vector<std::string >::iterator i = errors.begin(); i != errors.end(); ++i)
 	{
 		rapidjson::Value val((*i).c_str(), allocator);
@@ -50,7 +40,7 @@ void Report::GetReport()
 
 		thObj.AddMember(key, tElement, allocator);
 	}
-	doc["threads"] = thObj;
+	doc["threads"] = thObj;*/
 	
 	FILE * file = fopen(fileNameStream.str().c_str(), "w");
 
@@ -58,7 +48,16 @@ void Report::GetReport()
 	{
 		rapidjson::FileStream f(file);
 		rapidjson::PrettyWriter<rapidjson::FileStream> writer(f);
+		
+		rapidjson::Document doc;
 		doc.Accept(writer);
+		doc.SetObject();
+
+		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+	
+		doc.AddMember(rapidjson::Value("result"), rapidjson::Value(result), allocator);
+		doc.AddMember(rapidjson::Value("total"), rapidjson::Value(total), allocator);
+		doc.AddMember(rapidjson::Value("failed"), rapidjson::Value(failed), allocator);
 
 		fclose(file);
 	}
