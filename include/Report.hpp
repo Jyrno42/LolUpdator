@@ -6,6 +6,11 @@
 #include <sstream>
 #include <vector>
 
+#include "rapidjson/document.h"
+
+#include "rapidjson/prettywriter.h"
+#include "rapidjson/filestream.h"
+
 /* Boost */
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
