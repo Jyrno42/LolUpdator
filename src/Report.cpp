@@ -49,7 +49,6 @@ void Report::GetReport()
 	if (file != NULL)
 	{
 		rapidjson::FileStream f(file);
-		rapidjson::PrettyWriter<rapidjson::FileStream> writer(f);
 		
 		rapidjson::Document doc;
 		doc.Parse<0>("{}");
