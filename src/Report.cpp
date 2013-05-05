@@ -55,9 +55,13 @@ void Report::GetReport()
 
 		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 	
-		doc.AddMember(rapidjson::Value("result"), rapidjson::Value(result), allocator);
-		doc.AddMember(rapidjson::Value("total"), rapidjson::Value(total), allocator);
-		doc.AddMember(rapidjson::Value("failed"), rapidjson::Value(failed), allocator);
+		rapidjson::Value resVal(result);
+		rapidjson::Value totVal(total);
+		rapidjson::Value failVal(failed);
+
+		doc.AddMember("result", resVal, allocator);
+		doc.AddMember("total", totVal, allocator);
+		doc.AddMember("failed", failVal, allocator);
 
 		fclose(file);
 	}
