@@ -9,14 +9,7 @@ void Report::GetReport()
 	std::stringstream fileNameStream;
 	fileNameStream << reportDirectory << "report_" << timeStamp << ".json";
 
-	/*rapidjson::Value arr(rapidjson::kArrayType);
-	for(std::vector<std::string >::iterator i = errors.begin(); i != errors.end(); ++i)
-	{
-		rapidjson::Value val((*i).c_str(), allocator);
-		arr.PushBack(val, allocator);
-	}
-	doc["errors"] = arr;
-	
+	/*
 	rapidjson::Value tObj(rapidjson::kObjectType);
 	for(std::map<std::string, std::string >::iterator i = timers.begin(); i != timers.end(); ++i)
 	{
@@ -62,6 +55,14 @@ void Report::GetReport()
 		doc.AddMember("result", resVal, allocator);
 		doc.AddMember("total", totVal, allocator);
 		doc.AddMember("failed", failVal, allocator);
+
+		rapidjson::Value arr(rapidjson::kArrayType);
+		for(std::vector<std::string >::iterator i = errors.begin(); i != errors.end(); ++i)
+		{
+			rapidjson::Value val((*i).c_str(), allocator);
+			arr.PushBack(val, allocator);
+		}
+		doc.AddMember("errors", arr, allocator);
 
 		// Convert JSON document to string
 		rapidjson::StringBuffer strBuf;
