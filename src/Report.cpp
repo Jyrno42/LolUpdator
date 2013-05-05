@@ -50,11 +50,11 @@ void Report::GetReport()
 		rapidjson::PrettyWriter<rapidjson::FileStream> writer(f);
 		
 		rapidjson::Document doc;
+		doc.Parse<0>("{}");
 		doc.Accept(writer);
-		doc.SetObject();
 
 		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
-	
+			
 		rapidjson::Value resVal(result);
 		rapidjson::Value totVal(total);
 		rapidjson::Value failVal(failed);
@@ -62,6 +62,8 @@ void Report::GetReport()
 		doc.AddMember("result", resVal, allocator);
 		doc.AddMember("total", totVal, allocator);
 		doc.AddMember("failed", failVal, allocator);
+
+		
 
 		fclose(file);
 	}
