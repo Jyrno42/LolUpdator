@@ -1,5 +1,7 @@
 #include "Report.hpp"
 
+#include "rapidjson/stringbuffer.h"
+
 void Report::GetReport()
 {
 	std::time_t timeStamp = std::time(0);
@@ -51,7 +53,6 @@ void Report::GetReport()
 		
 		rapidjson::Document doc;
 		doc.Parse<0>("{}");
-		doc.Accept(writer);
 
 		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 			
@@ -63,7 +64,15 @@ void Report::GetReport()
 		doc.AddMember("total", totVal, allocator);
 		doc.AddMember("failed", failVal, allocator);
 
+		// Convert JSON document to string
+		rapidjson::StringBuffer strBuf;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(strBuf);
+		doc.Accept(writer);
+
+		std::string str = strBuf.GetString();
+		printf("--\n%s\n--\n", strBuf.GetString());
 		
+		fwrite(str.c_str(), str.length(), 1, file);
 
 		fclose(file);
 	}
