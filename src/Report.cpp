@@ -48,18 +48,19 @@ void Report::GetReport()
 		rapidjson::Value thObj(rapidjson::kObjectType);
 		for(std::map<std::string, ThreadInfo >::iterator i = threads.begin(); i != threads.end(); ++i)
 		{
-			rapidjson::Value key((*i).first.c_str());
+			rapidjson::Value tElement(rapidjson::kObjectType);
+			
+			rapidjson::Value started_threads((*i).second.started_threads);
+			rapidjson::Value finished_threads((*i).second.finished_threads);
+			rapidjson::Value summoners((*i).second.summoners);
+			rapidjson::Value time((*i).second.time.c_str());
+			
+			tElement.AddMember("started_threads", started_threads, allocator);
+			tElement.AddMember("finished_threads", finished_threads, allocator);
+			tElement.AddMember("summoners", summoners, allocator);
+			tElement.AddMember("time", time, allocator);
 
-			rapidjson::Value tElement;
-			tElement.SetObject();
-		
-			tElement["started_threads"].SetInt((*i).second.started_threads);
-			tElement["finished_threads"].SetInt((*i).second.finished_threads);
-			tElement["summoners"].SetInt((*i).second.summoners);
-
-			tElement["time"] = (*i).second.time.c_str();
-
-			thObj.AddMember(key, tElement, allocator);
+			thObj.AddMember((*i).first.c_str(), tElement, allocator);
 		}
 		doc.AddMember("threads", thObj, allocator);
 
