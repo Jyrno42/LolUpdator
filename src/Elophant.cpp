@@ -142,6 +142,8 @@ std::string Elophant::_makeCall_inner (const std::string& theFunction, const std
 		else
 		{
 			ApiKeys[key] = get_header_tag("Developer-Remaining", headBuffer);
+			
+			printf("Reamaining API calls: %s - %d", key, ApiKeys[key]);
 
 			return readBuffer;
 			/*JSONValue *value = JSON::Parse(readBuffer.c_str());
